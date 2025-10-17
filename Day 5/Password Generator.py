@@ -11,11 +11,11 @@ print("How many numbers would you like in your password?")
 num_count = int(input())
 password_first = []
 for i in range(let_count):
-    password_first.append(letters[random.randint(0, len(letters)-1)])
+    password_first.append(random.choice(letters))
 for i in range(symb_count):
-    password_first.append(symbols[random.randint(0, len(symbols)-1)])
+    password_first.append(random.choice(symbols))
 for i in range(num_count):
-    password_first.append(numbers[random.randint(0, len(numbers)-1)])
+    password_first.append(random.choice(numbers))
 print(password_first)
 random.shuffle(password_first)
 print(password_first)
