@@ -1,6 +1,10 @@
 import arts
 import random
 
+def deal_card():
+    hand = [random.choice(cards), random.choice(cards)]
+    return hand
+
 def check(hand):
     new_hand = []
     if sum(hand) <= 21:
@@ -13,6 +17,8 @@ def check(hand):
     new_hand.append(1)
     return new_hand
 
+user_hand = []
+computer_hand = []
 cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 playing_input = "Do you want to play a game of Blackjack? Type 'y' or 'n': "
 taking_input = "Type 'y' to get another card, type 'n' to pass: "
@@ -20,13 +26,10 @@ is_playing = True
 if input(playing_input) == 'n':
     is_playing = False
 while is_playing:
-    user_hand = []
-    computer_hand = []
     print("\n" * 50)
     print(arts.queen)
-    user_hand.append(random.choice(cards))
-    user_hand.append(random.choice(cards))
-    computer_hand.append(random.choice(cards))
+    user_hand = deal_card()
+    computer_hand = deal_card()
     print(f"\tYour cards: {user_hand}, current score: {sum(user_hand)}\n\tComputer's first card: {computer_hand[0]}")
     is_taking = True
     if input(taking_input) == "n":
