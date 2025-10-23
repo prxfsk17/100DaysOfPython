@@ -42,8 +42,8 @@ def cappuccino():
             resources["milk"] -= coffee["ingredients"]["milk"]
             resources["coffee"] -= coffee["ingredients"]["coffee"]
             money_in_machine += coffee["cost"]
-            print(f"Here is ${money-coffee["cost"]} in change.")
-            print("Here is your cappuccino. Enjoy!")
+            print(f"Here is ${round(money-coffee["cost"], 2)} in change.")
+            print(f"Here is your cappuccino. Enjoy! {coffee_emoji}")
         else:
             print("Sorry that's not enough money. Money refunded.")
 
@@ -57,8 +57,8 @@ def latte():
             resources["milk"] -= coffee["ingredients"]["milk"]
             resources["coffee"] -= coffee["ingredients"]["coffee"]
             money_in_machine += coffee["cost"]
-            print(f"Here is ${money-coffee["cost"]} in change.")
-            print("Here is your latte. Enjoy!")
+            print(f"Here is ${round(money-coffee["cost"], 2)} in change.")
+            print(f"Here is your latte. Enjoy! {coffee_emoji}")
         else:
             print("Sorry that's not enough money. Money refunded.")
 
@@ -72,7 +72,7 @@ def espresso():
             resources["coffee"] -= coffee["ingredients"]["coffee"]
             money_in_machine += coffee["cost"]
             print(f"Here is ${round(money-coffee["cost"], 2)} in change.")
-            print("Here is your espresso. Enjoy!")
+            print(f"Here is your espresso. Enjoy! {coffee_emoji}")
         else:
             print("Sorry that's not enough money. Money refunded.")
 
