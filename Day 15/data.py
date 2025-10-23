@@ -32,49 +32,30 @@ def process_coins():
     inserted_money += int(input("How many pennies?: ")) * 0.01
     return inserted_money
 
-def cappuccino():
+def make_a_coffee(coffee, coffee_name):
     global money_in_machine
-    coffee = MENU["cappuccino"]
     if check_resources(coffee):
         money = process_coins()
         if money >= coffee["cost"]:
-            resources["water"] -= coffee["ingredients"]["water"]
-            resources["milk"] -= coffee["ingredients"]["milk"]
-            resources["coffee"] -= coffee["ingredients"]["coffee"]
+            for ingredient in coffee["ingredients"]:
+                resources[ingredient] -= coffee["ingredients"][ingredient]
             money_in_machine += coffee["cost"]
-            print(f"Here is ${round(money-coffee["cost"], 2)} in change.")
-            print(f"Here is your cappuccino. Enjoy! {coffee_emoji}")
+            print(f"Here is ${round(money - coffee["cost"], 2)} in change.")
+            print(f"Here is your {coffee_name}. Enjoy! {coffee_emoji}")
         else:
             print("Sorry that's not enough money. Money refunded.")
+
+def cappuccino():
+    coffee = MENU["cappuccino"]
+    make_a_coffee(coffee, "cappuccino")
 
 def latte():
-    global money_in_machine
     coffee = MENU["latte"]
-    if check_resources(coffee):
-        money = process_coins()
-        if money >= coffee["cost"]:
-            resources["water"] -= coffee["ingredients"]["water"]
-            resources["milk"] -= coffee["ingredients"]["milk"]
-            resources["coffee"] -= coffee["ingredients"]["coffee"]
-            money_in_machine += coffee["cost"]
-            print(f"Here is ${round(money-coffee["cost"], 2)} in change.")
-            print(f"Here is your latte. Enjoy! {coffee_emoji}")
-        else:
-            print("Sorry that's not enough money. Money refunded.")
+    make_a_coffee(coffee, "latte")
 
 def espresso():
-    global money_in_machine
     coffee = MENU["espresso"]
-    if check_resources(coffee):
-        money = process_coins()
-        if money >= coffee["cost"]:
-            resources["water"] -= coffee["ingredients"]["water"]
-            resources["coffee"] -= coffee["ingredients"]["coffee"]
-            money_in_machine += coffee["cost"]
-            print(f"Here is ${round(money-coffee["cost"], 2)} in change.")
-            print(f"Here is your espresso. Enjoy! {coffee_emoji}")
-        else:
-            print("Sorry that's not enough money. Money refunded.")
+    make_a_coffee(coffee, "espresso")
 
 coffee_emoji = "☕"
 money_in_machine = 0
