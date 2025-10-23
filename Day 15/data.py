@@ -5,6 +5,11 @@ def report():
     print(f"Money: ${round(money_in_machine, 2)}")
 
 def check_resources(coffee):
+    for ingredient in coffee["ingredients"]:
+        if coffee["ingredients"][ingredient] > resources[ingredient]:
+            print(f"Sorry there is not enough {ingredient}.")
+            return False
+    return True
     try:
         if coffee["ingredients"]["water"] > resources["water"]:
             print("Sorry there is not enough water.")
