@@ -6,6 +6,12 @@ UP = 90
 LEFT = 180
 DOWN = 270
 
+
+def create_segment(segment, x_cord, y_cord):
+    segment.penup()
+    segment.color("white")
+    segment.setpos(x=x_cord, y=y_cord)
+
 class Snake:
 
     def __init__(self):
@@ -14,15 +20,16 @@ class Snake:
         self.init_snake()
         self.head = self.tail[0]
 
-    def create_new_segment(self):
-        pass
-
     def init_snake(self):
         for i in range(self.len):
-            self.tail[i].penup()
-            self.tail[i].color("white")
-            self.tail[i].setpos(x=-20 * i, y=0)
+            create_segment(self.tail[i], -20*i, 0)
         self.tail[0].color("green")
+
+    def grow(self):
+        last_tail = Turtle("square")
+        create_segment(last_tail, self.tail[self.len-1].xcor(), self.tail[self.len-1].ycor())
+        self.len += 1
+        self.tail.append(last_tail)
 
     def move(self):
         for seg_num in range(self.len - 1, 0, -1):
