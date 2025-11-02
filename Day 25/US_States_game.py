@@ -34,12 +34,12 @@ def play():
             break
 
     all_states = data.state.to_list()
-    missing_states = []
-    for state in all_states:
-        if state not in correct_guesses:
-            missing_states.append(state)
-    data_dict = {
-        "Missing states" : missing_states
-    }
-    pandas.DataFrame(data_dict).to_csv("Day 25/states_to_learn.csv")
+    missing_states = [state for state in all_states if state not in correct_guesses]
+    # for state in all_states:
+    #     if state not in correct_guesses:
+    #         missing_states.append(state)
+    # data_dict = {
+    #     "Missing states" : missing_states
+    # }
+    pandas.DataFrame(missing_states).to_csv("Day 25/states_to_learn.csv")
     turtle.mainloop()
