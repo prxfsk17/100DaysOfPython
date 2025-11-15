@@ -7,7 +7,15 @@ from notification_manager import NotificationManager
 
 flight_search_manager = FlightSearch()
 data_manager = DataManager(flight_search_manager)
-flight_data_manager = [FlightData(item["iataCode"], item["city"], flight_search_manager) for item in data_manager.get_record()]
-print(flight_data_manager)
+flight_data_manager = [FlightData(item["iataCode"], item["city"], item["lowestPrice"], flight_search_manager) for item in data_manager.get_record()]
+notification_manager = NotificationManager()
 
-# records = {'prices': [{'city': 'Paris', 'iataCode': 'PAR', 'lowestPrice': 100, 'id': 2}, {'city': 'Frankfurt', 'iataCode': 'FRA', 'lowestPrice': 230, 'id': 3}, {'city': 'Tokyo', 'iataCode': 'TYO', 'lowestPrice': 1000, 'id': 4}, {'city': 'Hong Kong', 'iataCode': 'HKG', 'lowestPrice': 860, 'id': 5}, {'city': 'Istanbul', 'iataCode': 'IST', 'lowestPrice': 227, 'id': 6}, {'city': 'Kuala Lumpur', 'iataCode': 'KUL', 'lowestPrice': 1003, 'id': 7}, {'city': 'New York', 'iataCode': 'NYC', 'lowestPrice': 825, 'id': 8}, {'city': 'San Francisco', 'iataCode': 'SFO', 'lowestPrice': 658, 'id': 9}, {'city': 'Dublin', 'iataCode': 'DBN', 'lowestPrice': 231, 'id': 10}, {'city': 'Vienna', 'iataCode': 'VIE', 'lowestPrice': 289, 'id': 11}, {'city': 'Prague', 'iataCode': 'PRG', 'lowestPrice': 557, 'id': 12}]}
+for flight in flight_data_manager:
+    data = flight.get_cheapest_on_interval()
+    if not data is None:
+        message=(f"Low price alert! Only {data["price"]["grandTotal"]} {data["price"]["currency"]} to fly from {data["itineraries"][0]["segments"][0]["departure"]["iataCode"]} "
+                 f"to {data["itineraries"][0]["segments"][0]["arrival"]["iataCode"]}, on {data["itineraries"][0]["segments"][0]["departure"]["at"]}.")
+    else:
+        message=(f"Sorry, we can't find any flights from {data["itineraries"][0]["segments"][0]["departure"]["iataCode"]} "
+                 f"to {data["itineraries"][0]["segments"][0]["arrival"]["iataCode"]}.")
+    notification_manager.send_message(message)
