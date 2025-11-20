@@ -1,0 +1,25 @@
+html {
+  background-color: black;
+}
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  width: 70%;
+  border: 5px solid white;
+}
+p {
+  color: antiquewhite;
+  text-align: center;
+}
+#title {
+  font-size: 3rem;
+  font-weight: 600;
+  margin: 0px;
+}
+#subtitle {
+  font-size: 1.5rem;
+  margin: 5px;
+}
