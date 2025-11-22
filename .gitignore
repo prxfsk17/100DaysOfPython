@@ -3,3 +3,4 @@
 /Day 29/password_manager_data.txt
 /Day 31/data/words_to_learn.csv
 *.env
+/token.txt
