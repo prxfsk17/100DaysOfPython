@@ -8,7 +8,7 @@ list_send_to=[{"name":row["name"],"email":row["email"]} for (index,row) in recor
 # 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
 if len(list_send_to)>0:
     my_gmail = "alesspy7@gmail.com"
-    my_pass = "ihxqntmwikiipsou"
+    my_pass = "123"
     import smtplib
     import random
     for person in list_send_to:
