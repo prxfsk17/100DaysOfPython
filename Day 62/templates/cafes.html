@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Restaurants{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1>All Cafes</h1>
+	  <table class="table table-dark table-striped table-hover">
+          <!-- This is where you will write the code to render a Bootstrap 
+          Table that contains all the information from the 
+          cafe-data.csv file. -->
+          {% for row in cafes %}
+          <hr class="my-3">
+          <div class="row flex-lg align-items-center g-5 pb-2 px-5">
+              <span class="col-lg-3">{{row[0]}}</span>
+              {% if cafes.index(row) != 0 %}
+              <a class="col-lg-2" style="color:orange" href="{{row[1]}}">Maps Link</a>
+              {% else %}
+              <span class="col-lg-2">{{row[1]}}</span>
+              {% endif %}
+              <span class="col-lg-2">{{row[2]}}</span>
+              <span class="col-lg-2">{{row[3]}}</span>
+              <span class="col-lg-1">{{row[4]}}</span>
+              <span class="col-lg-1">{{row[5]}}</span>
+              <span class="col-lg-1">{{row[6]}}</span>
+          </div>
+          {% endfor %}
+  	  </table>
+
+      <p><a href="#">Return to index page</a></p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
