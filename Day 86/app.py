@@ -5,10 +5,8 @@ from tkinter import ttk
 from random import choice
 from texts import list
 
-
 def get_article():
     return choice(list)
-
 
 class TypingSpeedTest:
 
@@ -19,12 +17,14 @@ class TypingSpeedTest:
         self.canvas = None
         self.main_text_id = None
         self.editor : tk.Text = None
+        self.label_result : tk.Label = None
         self.text=""
         self.current_position = 0
         self.correct_chars = 0
         self.errors = 0
         self.start_time = None
         self.test_active = False
+        self.has_error = False
 
         self.setup_ui()
 
@@ -42,11 +42,11 @@ class TypingSpeedTest:
         label_app = tk.Label(main_frame, text="Typing speed test", font=("Verdana", 17, "bold italic"), background="#d9d9d9")
         label_app.grid(row=0, column=0, columnspan=2)
 
-        self.canvas = tk.Canvas(main_frame, bg="white", width=750, height=200)
+        self.canvas = tk.Canvas(main_frame, bg="white", width=750, height=350)
         self.canvas.grid(row=1, column=0, columnspan=2, pady=(20,0))
         self.main_text_id = self.canvas.create_text(
             370,
-            90,
+            140,
             text="Here you can see text you should to type in field below.",
             fill="#004D40",
             font=("Verdana", 13),
@@ -60,8 +60,11 @@ class TypingSpeedTest:
         self.editor.tag_config("correct", background="#C8E6C9")
         self.editor.tag_config("wrong", background="#FFCDD2")
 
+        self.label_result = tk.Label(main_frame, text="", font=("Verdana", 14, "italic"), background="#d9d9d9")
+        self.label_result.grid(row=3, column=0, columnspan=2, pady=(20, 10))
+
         buttons_frame = ttk.Frame(main_frame, padding=10)
-        buttons_frame.grid(row=3, column=0, columnspan=2, pady=(20,0))
+        buttons_frame.grid(row=4, column=0, columnspan=2, pady=(20,0))
         button_start = tk.Button(buttons_frame, text="Start new test", command=self.start_test, font=("Verdana", 13))
         button_start.pack(side=tk.LEFT, padx=5)
 
@@ -78,35 +81,37 @@ class TypingSpeedTest:
 
     def on_key_press(self, event):
         if not self.test_active:
-            return
+            return "break"
         if event.keysym in ["Shift_L", "Shift_R", "Control_L",
                             "Control_R", "Alt_L", "Alt_R", "Caps_Lock"]:
-            return
+            return "break"
         if event.keysym == "BackSpace":
-            self.handle_backspace()
-            return
+            if not self.has_error:
+                self.current_position-=1
+            self.has_error = False
+            return None
+
+        if self.has_error:
+            return "break"
+
         char = event.char
-        if char:  # Добавь проверку что char не пустой
-            # ЗАПОМНИТЬ правильность символа
+        if char:
             is_correct = (self.text[self.current_position] == char)
 
-            # Обновить счетчики сразу
             if is_correct:
                 self.correct_chars += 1
                 self.current_position += 1
 
             else:
+                print(self.text[self.current_position])
                 self.errors += 1
+                self.has_error = True
 
-            # УВЕЛИЧИТЬ позицию сразу
-
-            # ОТЛОЖИТЬ подсветку на 10 мс
             self.root.after(10, lambda: self.highlight_char_delayed(is_correct))
-        if self.current_position >= len(self.text):
-            self.handle_test_end()
 
-    def handle_backspace(self):
-        pass
+        if self.current_position >= len(self.text):
+            self.root.after(10, lambda: self.handle_test_end())
+
 
     def highlight_char_delayed(self, is_correct):
         try:
@@ -127,8 +132,25 @@ class TypingSpeedTest:
             print(f"{e}")
 
     def handle_test_end(self):
-        pass
+        current_time = time.time()
+        self.editor.config(state="disabled")
+        self.test_active = False
+        testing_time = current_time-self.start_time
+        if testing_time <= 0:
+            testing_time = 0.001
+        result_text = f"Result: speed: {self.calculate_spm(testing_time):.2f} CPM, accuracy: {self.calculate_accuracy():.1f}%"
+        self.label_result.config(text=result_text)
+
+    def calculate_spm(self, interval):
+        return (self.correct_chars+self.errors)*60/interval
+
+    def calculate_accuracy(self):
+        total_chars = self.correct_chars + self.errors
+        if total_chars == 0:
+            return 0
+        return (self.correct_chars / total_chars) * 100
 
     def update_text(self):
         self.text=get_article()
         self.canvas.itemconfig(self.main_text_id, text=self.text)
+        self.label_result.config(text="")
