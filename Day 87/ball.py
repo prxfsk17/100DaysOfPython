@@ -15,7 +15,7 @@ class Ball(Turtle):
         self.y_dir = 0
         self.x_move = 3
         self.y_move = 3
-        self.move_speed = 0.01
+        self.move_speed = 0.001
 
     def start_game(self):
         angle = random.randint(30, 150)
@@ -26,7 +26,6 @@ class Ball(Turtle):
         self.y_move = speed * math.sin(rad)
 
     def move(self):
-        """Двигает мяч"""
         new_x = self.xcor() + self.x_move
         new_y = self.ycor() + self.y_move
         self.goto(new_x, new_y)

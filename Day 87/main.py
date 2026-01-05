@@ -3,7 +3,7 @@ from turtle import Screen
 
 from paddle import Paddle
 from ball import Ball
-
+from bricks_manager import BricksManager
 
 screen = Screen()
 screen.setup(width=800, height=900)
@@ -21,11 +21,11 @@ screen.onkeyrelease(key="d", fun=paddle.stop_moving)
 ball = Ball()
 ball.start_game()
 
+bricks_manager = BricksManager(800, 900)
+
 game_is_on = True
 while game_is_on:
     time.sleep(ball.move_speed)
-
-
     ball.move()
     paddle.update()
 
