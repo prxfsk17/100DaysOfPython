@@ -15,6 +15,7 @@ class Ball(Turtle):
         self.y_dir = 0
         self.x_move = 3
         self.y_move = 3
+        self.radius = 10
         self.move_speed = 0.001
 
     def start_game(self):
@@ -73,18 +74,42 @@ class Ball(Turtle):
         return False
 
     def check_brick_collision(self, bricks):
+
+        h = 20
+        w = 60
+
         for brick in bricks:
-            if self.distance(brick) < 25:
 
-                ball_x, ball_y = self.xcor(), self.ycor()
-                brick_x, brick_y = brick.xcor(), brick.ycor()
+            x = brick.xcor()
+            y = brick.ycor()
 
-                if abs(ball_x - brick_x) > abs(ball_y - brick_y):
+            brick_top = y + h/2
+            brick_bottom = y - h/2
+            brick_left = x - w/2
+            brick_right = x + w/2
+
+            ball_top = self.ycor() + self.radius
+            ball_bottom = self.ycor() - self.radius
+            ball_left = self.xcor() - self.radius
+            ball_right = self.xcor() + self.radius
+
+            if (ball_top >= brick_bottom and
+                ball_bottom <= brick_top and
+                ball_left <= brick_right and
+                ball_right >= brick_left):
+
+                from_top = abs(ball_top - brick_bottom)
+                from_bottom = abs(ball_bottom - brick_top)
+                from_left = abs(ball_left - brick_right)
+                from_right = abs(ball_right - brick_left)
+
+                min_overlap = min(from_left, from_right,
+                                  from_top, from_bottom)
+
+                if min_overlap == from_left or min_overlap == from_right:
                     self.bounce_x()
                 else:
                     self.bounce_y()
-                bricks.remove(brick)
-                brick.hideturtle()
                 return brick
         return None
 

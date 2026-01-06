@@ -29,22 +29,20 @@ while game_is_on:
     ball.move()
     paddle.update()
 
-
     if ball.check_wall_collision(800, 900):
-
         pass
 
 
     if ball.check_paddle_collision(paddle):
-
         pass
 
+    brick_to_remove = ball.check_brick_collision(bricks_manager.get_current_bricks())
+    if not brick_to_remove is None:
+        bricks_manager.remove_brick(brick_to_remove)
 
     if ball.ycor() < -450:
         ball.reset_position()
 
     screen.update()
-
-
 
 screen.exitonclick()

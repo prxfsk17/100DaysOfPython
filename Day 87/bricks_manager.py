@@ -18,3 +18,10 @@ class BricksManager:
                     self.all_bricks.append(brick)
                     x += 80
                 y -= 40
+
+    def get_current_bricks(self):
+        return self.all_bricks
+
+    def remove_brick(self, brick):
+        self.all_bricks.remove(brick)
+        brick.hideturtle()
