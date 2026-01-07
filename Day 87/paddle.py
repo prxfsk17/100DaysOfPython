@@ -42,3 +42,10 @@ class Paddle(Turtle):
         elif self.moving_right and self.blocks[-1].xcor() + self.move_speed < 400:
             for block in self.blocks:
                 block.goto(block.xcor() + self.move_speed, block.ycor())
+
+    def second_level(self):
+        for block in self.blocks:
+            block.hideturtle()
+        self.len = 5
+        self.blocks = []
+        self.create_blocks()

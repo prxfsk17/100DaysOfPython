@@ -13,18 +13,21 @@ class Ball(Turtle):
         self.goto(0, -330)
         self.x_dir = 0
         self.y_dir = 0
-        self.x_move = 3
-        self.y_move = 3
+        self.x_move = 0
+        self.y_move = 0
         self.radius = 10
         self.move_speed = 0.001
+        self.lives = 3
+        self.score=0
 
     def start_game(self):
-        angle = random.randint(30, 150)
-        rad = angle * 3.14159 / 180
+        if self.x_move == 0 and self.y_move == 0:
+            angle = random.randint(30, 150)
+            rad = angle * 3.14159 / 180
 
-        speed = 5
-        self.x_move = speed * math.cos(rad)
-        self.y_move = speed * math.sin(rad)
+            speed = 5
+            self.x_move = speed * math.cos(rad)
+            self.y_move = speed * math.sin(rad)
 
     def move(self):
         new_x = self.xcor() + self.x_move
@@ -39,7 +42,18 @@ class Ball(Turtle):
 
     def reset_position(self):
         self.goto(0, -330)
-        self.start_game()
+        self.x_move = 0
+        self.y_move = 0
+
+    def decrement_lives(self):
+        self.lives -=1
+        if self.lives > 0:
+            self.reset_position()
+            return True
+        else:
+            self.reset_position()
+            self.hideturtle()
+            return False
 
     def check_wall_collision(self, screen_width, screen_height):
         x_pos = self.xcor()
@@ -62,14 +76,10 @@ class Ball(Turtle):
                 paddle_x = block.xcor()
                 ball_x = self.xcor()
 
-
                 relative_x = ball_x - paddle_x
                 self.x_move = relative_x * 0.2
 
                 self.y_move = abs(self.y_move)
-
-
-                self.increase_speed()
                 return True
         return False
 
@@ -110,6 +120,7 @@ class Ball(Turtle):
                     self.bounce_x()
                 else:
                     self.bounce_y()
+                self.increase_speed()
                 return brick
         return None
 
