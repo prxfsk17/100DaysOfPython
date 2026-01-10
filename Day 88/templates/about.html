@@ -1,0 +1,70 @@
+{% include "header.html" %}
+
+<!-- Page Header-->
+<div class="masthead bg-dark position-relative overflow-hidden" style="height: 60vh;">
+    <div class="position-absolute top-0 start-0 w-100 h-100"
+         style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{{ url_for('static', filename='imgs/coffee.png') }}') center/cover no-repeat;"></div>
+    <div class="container position-relative h-100 px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7 text-center">
+                <div class="page-heading text-white">
+                    <h1 class="display-4 fw-bold">About Me</h1>
+                    <span class="subheading fs-3">This is what I do.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Content-->
+<main class="mb-4">
+    <div class="container px-4 px-lg-5 py-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p>
+                    Coffee & Wifi - Discover Your Perfect Workspace
+                    Welcome to Coffee & Wifi, your ultimate guide to the best cafes for digital nomads, remote workers,
+                    and coffee enthusiasts. Browse our curated list of cafes with reliable wifi, power outlets, quality
+                    coffee, and comfortable seating.
+                </p>
+                <p>
+                    Each cafe has its own detailed page featuring:
+                <ul>
+                    <li>
+                        Location and hours
+                    </li>
+                    <li>
+                        Wifi speed and reliability rating
+                    </li>
+                    <li>
+                        Power outlet availability
+                    </li>
+                    <li>
+                        Coffee quality
+                    </li>
+                    <li>
+                        Noise level and atmosphere
+                    </li>
+                </ul>
+
+                </br>Registered users enjoy extra benefits:
+                <ul>
+                    <li>
+                        ✍️ Leave reviews for cafes
+                    </li>
+                    <li>
+                        💬 Share tips and experiences in comments
+                    </li>
+                </ul>
+                </p>
+                <p>
+                    Whether you need a quiet spot for focused work, a cozy corner for creative sessions, or just great
+                    coffee with reliable internet - find your ideal workspace with us. Join our community of remote
+                    workers and cafe lovers today!
+                    </br></br>Work remotely. Caffeinate locally.
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include "footer.html" %}

@@ -1,37 +1,37 @@
 {% include "header.html" %}
 
-<!-- Page Content -->
-<div class="container mt-4">
-    <div class="p-5 mb-4 bg-light rounded-3">
-        <h2>Welcome!</h2>
-        <p class="lead">This is your content.</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            {% if admin %}
+            <div class="mb-4 text-center">
+                <a href="/add-cafe" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Add New Cafe
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Список кофеен -->
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">All Cafes</h4>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for cafe in all_cafes %}
+                    <a href="/cafe/{{ cafe.id }}" class="list-group-item list-group-item-action">
+                        {{ cafe.name }}
+                    </a>
+                    {% else %}
+                    <div class="list-group-item text-center text-muted py-4">
+                        No cafes available yet.
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <table class="table table-bordered table-hover">
-        <thead class="table-light">
-        <tr class="sticky-top">
-            <th>#</th>
-            <th>First</th>
-            <th>Last</th>
-            <th>Email</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-            <td>Active</td>
-        </tr>
-        <!-- остальные строки таблицы -->
-        </tbody>
-    </table>
-
-    <!-- Filler content to show scroll behavior -->
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-    <p style="height: 100px;">(scroll down to test sticky navbar)</p>
 </div>
 
 {% include "footer.html" %}

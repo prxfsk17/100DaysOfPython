@@ -1,0 +1,93 @@
+{% include "header.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <!-- Back Button -->
+            <a href="/" class="btn btn-outline-secondary mb-4">← Back</a>
+
+            <!-- Cafe Image -->
+            <div class="text-center mb-4">
+                <img src="{{ cafe.image_url }}"
+                     alt="{{ cafe.name }}"
+                     class="img-fluid rounded shadow"
+                     style="max-height: 400px; object-fit: cover;">
+            </div>
+
+            <!-- Cafe Info -->
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ cafe.name }}</h2>
+                    <p class="card-text">
+                        <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                        {{ cafe.address }}
+                    </p>
+
+                    <!-- Ratings -->
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <small class="text-muted">WiFi</small><br>
+                            <span class="text-warning">{{ "★" * cafe.wifi_rating|int }}{{ "☆" * (5 - cafe.wifi_rating|int) }}</span>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted">Coffee</small><br>
+                            <span class="text-warning">{{ "★" * cafe.coffee_quality|int }}{{ "☆" * (5 - cafe.coffee_quality|int) }}</span>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted">Quiet</small><br>
+                            <span class="text-warning">{{ "★" * cafe.quietness|int }}{{ "☆" * (5 - cafe.quietness|int) }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="mb-3">
+                        <strong>Hours:</strong> {{ cafe.open_time }} - {{ cafe.close_time }}<br>
+                        <strong>Price:</strong> {{ cafe.coffee_price }}<br>
+                        <strong>Power Outlets:</strong>
+                        {% if cafe.power_outlets %}
+                        <span class="text-success">✓ Available</span>
+                        {% else %}
+                        <span class="text-danger">✗ Not Available</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Map Link -->
+                    <div class="mt-4">
+                        <a href="{{ cafe.location_url }}" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-map me-2"></i>View on Map
+                        </a>
+                    </div>
+                </div>
+                <!-- Comments Area -->
+                {% if logged_in %}
+                {{ ckeditor.load() }} {{ ckeditor.config(name='body') }}{{
+                render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+                <div class="comment py-5">
+
+                    <div class="commentList">
+                        {% for comm in comments %}
+                        <div>
+
+                            <div class="commenterImage">
+                                <img src="{{ comm.author.email | gravatar }}"/>
+                                <span class="date sub-text">{{comm.author.name}} commented:</span>
+                            </div>
+                            <div class="commentText">
+                                <p>"{{comm.text |safe}}"</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {%else%}
+                <a style="color:orange" href="{{url_for('login', cafe_id=cafe.id)}}">Please log in to write a
+                    comment</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
