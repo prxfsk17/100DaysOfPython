@@ -42,7 +42,7 @@ class CreateCafeForm(FlaskForm):
                                validators=[DataRequired(), URL()],
                                render_kw={"placeholder": "https://goo.gl/maps/..."})
 
-    submit = SubmitField("Add Cafe", render_kw={"class": "btn btn-primary btn-lg"})
+    submit = SubmitField("Add Cafe", render_kw={"class": "btn btn-primary btn-lg mt-3"})
 
 class RegisterForm(FlaskForm):
     email=StringField("Email", validators=[DataRequired(), Email()])

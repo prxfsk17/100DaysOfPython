@@ -17,6 +17,8 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("FLASK_KEY")
 ckeditor = CKEditor(app)
+#uncomment if you install new version as local files
+# app.config['CKEDITOR_SERVE_LOCAL'] = True
 Bootstrap5(app)
 
 gravatar = Gravatar(app,
@@ -177,7 +179,7 @@ def show_cafe(cafe_id):
         )
         db.session.add(new_comm)
         db.session.commit()
-        return redirect(url_for("show_cafe", post_id=cafe_id))
+        return redirect(url_for("show_cafe", cafe_id=cafe_id))
     else:
         cafe = db.get_or_404(Cafe, cafe_id)
         if current_user.is_authenticated:
