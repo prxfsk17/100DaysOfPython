@@ -1,0 +1,137 @@
+{% include "header.html" %}
+
+<!-- Page Header-->
+<div class="masthead bg-dark position-relative overflow-hidden" style="height: 60vh;">
+    <div class="position-absolute top-0 start-0 w-100 h-100"
+         style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://images.unsplash.com/photo-1551590192-8070a16d9f67?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+                center/cover no-repeat;"></div>
+    <div class="container position-relative h-100 px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7 text-center">
+                <div class="page-heading text-white">
+                    <h1 class="display-4 fw-bold">About Todo List</h1>
+                    <span class="subheading fs-3">Your personal task manager</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content-->
+<main class="mb-4">
+    <div class="container px-4 px-lg-5 py-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p class="lead">
+                    Welcome to <strong>Todo List</strong> — a modern web application for efficient task management. Organize your work, plan projects, and track progress in a simple and intuitive interface.
+                </p>
+
+                <h3 class="mt-5">How It Works</h3>
+                <p>
+                    System is based on the Kanban method and allows you to distribute tasks across three main columns:
+                </p>
+
+                <div class="row mt-4">
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-warning h-100">
+                            <div class="card-header bg-warning text-white">
+                                <h5 class="mb-0">📝 Planned</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>All tasks you plan to complete. This is where ideas, future plans, and upcoming tasks are stored.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-info h-100">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">⚡ In Progress</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Tasks you're currently working on. This is your current focus and active projects.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-success h-100">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">🎯 Completed</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Finished tasks. View your progress and celebrate achievements.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="mt-5">Key Features</h3>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <i class="bi bi-plus-circle text-primary me-2"></i>
+                        <strong>Create Tasks</strong> — Add tasks with titles and descriptions
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-person text-primary me-2"></i>
+                        <strong>Personal Account</strong> — Your tasks are saved and accessible from any device
+                    </li>
+                </ul>
+
+                <h3 class="mt-5">Why Choose Todo List?</h3>
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-lightning-charge display-6 text-primary mb-3"></i>
+                                <h5>Simple & Fast</h5>
+                                <p class="text-muted">Interface that lets you manage tasks in seconds without complex setup.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-shield-check display-6 text-primary mb-3"></i>
+                                <h5>Secure & Private</h5>
+                                <p class="text-muted">Your data is protected and accessible only to you.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-phone display-6 text-primary mb-3"></i>
+                                <h5>Responsive Design</h5>
+                                <p class="text-muted">Works perfectly on desktops, tablets, and mobile devices.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="alert alert-info mt-5">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-info-circle display-6 me-3"></i>
+                        <div>
+                            <h5 class="alert-heading mb-2">Getting Started</h5>
+                            <p class="mb-0">
+                                Ready to boost your productivity? <a href="{{ url_for('register') }}" class="alert-link">Create an account</a> or
+                                <a href="{{ url_for('login') }}" class="alert-link">sign in</a> to start organizing your tasks today.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-center mt-5">
+                    <small class="text-muted">Todo List helps individuals and teams stay organized, focused, and productive.</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include "footer.html" %}

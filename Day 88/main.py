@@ -105,10 +105,8 @@ class Comment(db.Model):
 
     text: Mapped[str] = mapped_column(Text, nullable=False)
 
-
 with app.app_context():
     db.create_all()
-
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
