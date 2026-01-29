@@ -5,6 +5,7 @@ import pyautogui
 import numpy as np
 from pynput.keyboard import Key, Controller
 
+#https://dino-chrome.com
 OBSTACLE_BOUNDING_ORIGIN = (745, 875)
 OBSTACLE_BOUNDING_END = (820, 900)
 HIGHEST_JUMP_BOUNDING_ORIGIN = (670, 777)
