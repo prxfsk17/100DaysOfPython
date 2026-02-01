@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - Простой магазин</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <nav class="navbar navbar-light bg-light mb-4 rounded">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">🛒 Простой магазин</a>
+                <a href="/" class="btn btn-outline-primary">← Назад к товарам</a>
+            </div>
+        </nav>
+
+        <!-- Сообщения -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1 class="mb-4">🛍️ Ваша корзина</h1>
+
+        {% if cart_items %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th>Цена</th>
+                                    <th>Количество</th>
+                                    <th>Сумма</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart_items %}
+                                <tr>
+                                    <td>{{ item.product.name }}</td>
+                                    <td>{{ item.product.price }} ₽</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.total }} ₽</td>
+                                    <td>
+                                        <form method="POST" action="/remove_from_cart/{{ item.product.id }}">
+                                            <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Итого</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Товары:</span>
+                            <span>{{ total }} ₽</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Доставка:</span>
+                            <span class="text-success">Бесплатно</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>К оплате:</strong>
+                            <strong class="h4 text-success">{{ total }} ₽</strong>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="/checkout" class="btn btn-success btn-lg">
+                                💳 Перейти к оформлению
+                            </a>
+                            <form method="POST" action="/clear_cart">
+                                <button type="submit" class="btn btn-outline-danger">
+                                    🗑️ Очистить корзину
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="display-1 mb-4">🛒</div>
+            <h3>Корзина пуста</h3>
+            <p class="text-muted mb-4">Добавьте товары, чтобы продолжить покупки</p>
+            <a href="/" class="btn btn-primary btn-lg">Вернуться к товарам</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

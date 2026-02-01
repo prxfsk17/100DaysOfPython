@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простой магазин</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 20px; background-color: #f8f9fa; }
+        .product-card { transition: transform 0.3s; }
+        .product-card:hover { transform: translateY(-5px); }
+        .cart-badge { position: absolute; top: -5px; right: -5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Навигация -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 rounded shadow">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">🛒 Простой магазин</a>
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link position-relative" href="/cart">
+                        🛍️ Корзина
+                        {% if session.cart %}
+                            <span class="badge bg-danger cart-badge">{{ session.cart.values()|sum }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Сообщения -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Заголовок -->
+        <div class="row mb-4">
+            <div class="col">
+                <h1>Наш товар</h1>
+                <p class="text-muted">Протестируйте процесс покупки</p>
+            </div>
+        </div>
+
+        <!-- Товары -->
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-6 mx-auto">
+                <div class="card product-card mb-4">
+                    <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description }}</p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="text-success">{{ product.price }} ₽</h4>
+                                <small class="text-muted">В наличии: {{ product.stock }} шт.</small>
+                            </div>
+
+                            <form method="POST" action="/add_to_cart/{{ product.id }}">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    🛒 Добавить в корзину
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Инструкция -->
+        <div class="row mt-5">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>📋 Как протестировать:</h5>
+                        <ol>
+                            <li>Добавьте товар в корзину</li>
+                            <li>Перейдите в корзину</li>
+                            <li>Оформите заказ</li>
+                            <li>Для оплаты используйте тестовую карту: <code>4242 4242 4242 4242</code></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
