@@ -18,7 +18,6 @@ last_update_time = None
 def get_headers():
     return {'x-apisports-key': API_KEY}
 
-
 def safe_get_capacity(capacity):
     if capacity is None:
         return 0
@@ -31,7 +30,6 @@ def safe_get_capacity(capacity):
             return 0
     else:
         return 0
-
 
 def fetch_circuits_from_api():
     try:
@@ -79,7 +77,6 @@ def get_test_circuits():
         'owner': None
     }]
 
-
 def calculate_statistics(circuits):
     total_capacity = 0
     countries = set()
@@ -97,7 +94,6 @@ def calculate_statistics(circuits):
         'country_count': len(countries)
     }
 
-
 def update_info():
     global circuits_cache, statistics_cache, last_update_time
 
@@ -108,6 +104,40 @@ def update_info():
         circuits_cache = fetch_circuits_from_api()
         statistics_cache = calculate_statistics(circuits_cache)
         last_update_time = now
+
+@app.context_processor
+def utility_processor():
+
+    def format_number(value):
+        try:
+            return "{:,}".format(value)
+        except:
+            return value
+
+    def cache_age_minutes():
+        if last_update_time:
+            delta = datetime.now() - last_update_time
+            return round(delta.total_seconds() / 60, 1)
+        return None
+
+    def get_cache_status():
+        if last_update_time is None:
+            return 'error'
+        delta = datetime.now() - last_update_time
+        if delta.total_seconds() < 300:  # 5 минут
+            return 'fresh'
+        else:
+            return 'stale'
+
+    return {
+        'now': datetime.now(),
+        'current_year': datetime.now().year,
+        'app_name': 'F1 Circuits',
+        'format_number': format_number,
+        'cache_age': cache_age_minutes(),
+        'cache_status': get_cache_status(),
+        'last_update': last_update_time
+    }
 
 @app.route('/')
 @app.route('/circuits')
@@ -155,7 +185,6 @@ def status():
         if last_update_time else None,
     }
     return render_template('status.html', **cache_info)
-
 
 if __name__ == '__main__':
     update_info()
