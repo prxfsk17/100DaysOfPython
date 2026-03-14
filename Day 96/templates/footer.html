@@ -1,63 +1,30 @@
 <footer class="bg-black text-light py-5 mt-5 border-top border-danger">
     <div class="container">
-        <div class="row gy-5">
-            <!-- About Section -->
-            <div class="col-lg-4">
+        <div class="row gy-5 justify-content-between">
+            <!-- About Section - слева -->
+            <div class="col-lg-5">
                 <div class="d-flex align-items-center mb-4">
                     <div class="bg-danger bg-opacity-25 p-3 rounded-circle me-3">
                         <i class="bi bi-speedometer2 text-danger fs-3"></i>
                     </div>
                     <div>
                         <h4 class="mb-0 fw-bold">{{ app_name }}</h4>
-                        <small class="text-secondary-emphasis">Since 2024</small>
                     </div>
                 </div>
-                <p class="text-secondary-emphasis mb-4">
+                <p class="text-secondary-emphasis mb-4" style="max-width: 90%;">
                     Your premier destination for Formula 1 circuit information.
                     Real-time data, detailed specs, and historical records.
                 </p>
                 <div class="d-flex gap-3">
-                    <a href="#" class="text-light fs-5 hover-danger"><i class="bi bi-twitter-x"></i></a>
-                    <a href="#" class="text-light fs-5 hover-danger"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-light fs-5 hover-danger"><i class="bi bi-youtube"></i></a>
-                    <a href="#" class="text-light fs-5 hover-danger"><i class="bi bi-github"></i></a>
+                    <a href="https://github.com/prxfsk17/100DaysOfPython/tree/master/Day%2096" class="text-light fs-5 hover-danger" target="_blank">
+                        <i class="bi bi-github"></i>
+                    </a>
                 </div>
             </div>
 
-            <!-- Quick Links -->
-            <div class="col-lg-2 col-md-4">
-                <h5 class="fw-bold mb-4">Quick Links</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-3">
-                        <a href="/" class="text-secondary-emphasis text-decoration-none hover-danger">
-                            <i class="bi bi-chevron-right small me-2"></i>
-                            Home
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="/circuits" class="text-secondary-emphasis text-decoration-none hover-danger">
-                            <i class="bi bi-chevron-right small me-2"></i>
-                            All Circuits
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="/status" class="text-secondary-emphasis text-decoration-none hover-danger">
-                            <i class="bi bi-chevron-right small me-2"></i>
-                            System Status
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="/force-refresh" class="text-secondary-emphasis text-decoration-none hover-danger">
-                            <i class="bi bi-chevron-right small me-2"></i>
-                            Refresh Data
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- System Info -->
-            <div class="col-lg-3 col-md-4">
-                <h5 class="fw-bold mb-4">System Status</h5>
+            <!-- System Info - справа -->
+            <div class="col-lg-4">
+                <h5 class="fw-bold mb-4 text-end">System Status</h5>
                 <div class="bg-dark bg-opacity-50 p-4 rounded-3 border border-secondary">
                     <div class="d-flex justify-content-between mb-3">
                         <span class="text-secondary-emphasis">Cache:</span>
@@ -99,49 +66,18 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Newsletter -->
-            <div class="col-lg-3 col-md-4">
-                <h5 class="fw-bold mb-4">Stay Updated</h5>
-                <p class="text-secondary-emphasis small mb-3">
-                    Get notified about new circuits and updates.
-                </p>
-                <div class="input-group">
-                    <input type="email" class="form-control bg-dark border-secondary text-light"
-                           placeholder="Your email" aria-label="Email">
-                    <button class="btn btn-danger" type="button">
-                        <i class="bi bi-send"></i>
-                    </button>
-                </div>
-                <small class="text-secondary-emphasis d-block mt-3">
-                    <i class="bi bi-shield-check me-1"></i>
-                    No spam, unsubscribe anytime.
-                </small>
-            </div>
         </div>
 
         <!-- Copyright -->
         <hr class="border-secondary mt-5">
-
         <div class="row align-items-center">
-            <div class="col-md-6 text-center text-md-start">
+            <div class="col text-center">
                 <p class="small text-secondary-emphasis mb-0">
                     <i class="bi bi-c-circle me-1"></i>
                     {{ current_year }} {{ app_name }}.
                     <span class="mx-2">|</span>
-                    Powered by <a href="#" class="text-danger text-decoration-none">API-Sports</a>
+                    Powered by <a href="https://api-sports.io/documentation/formula-1/v1" class="text-danger text-decoration-none">API-Sports</a>
                 </p>
-            </div>
-            <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
-                <a href="#" class="text-secondary-emphasis text-decoration-none small me-3 hover-danger">
-                    Privacy Policy
-                </a>
-                <a href="#" class="text-secondary-emphasis text-decoration-none small me-3 hover-danger">
-                    Terms of Use
-                </a>
-                <a href="#" class="text-secondary-emphasis text-decoration-none small hover-danger">
-                    Contact
-                </a>
             </div>
         </div>
     </div>
@@ -160,5 +96,13 @@
     }
     .bg-opacity-50 {
         background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+    @media (min-width: 992px) {
+        .col-lg-5:first-child {
+            padding-right: 3rem;
+        }
+        .col-lg-4:last-child {
+            padding-left: 2rem;
+        }
     }
 </style>

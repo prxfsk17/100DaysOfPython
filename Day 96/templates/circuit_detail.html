@@ -4,26 +4,14 @@
 
 {% block extra_css %}
 <style>
-    .circuit-hero {
-        height: 450px;
-        background-size: cover;
-        background-position: center;
-        position: relative;
+    /* Убираем hero с картинкой, делаем простой заголовок */
+    .circuit-header {
+        background: linear-gradient(135deg, #0a0a0f, #1a1a2e);
+        padding: 3rem 0;
+        border-bottom: 3px solid var(--bs-danger);
         margin-top: -1.5rem;
     }
-    .circuit-hero::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.9));
-    }
-    .hero-content {
-        position: relative;
-        z-index: 2;
-    }
+
     .stat-card {
         background: rgba(255,255,255,0.05);
         border-radius: 15px;
@@ -42,6 +30,7 @@
         margin-bottom: 15px;
         color: var(--bs-danger);
     }
+
     .lap-record-display {
         background: linear-gradient(135deg, #dc3545, #a71d2a);
         border-radius: 15px;
@@ -59,16 +48,60 @@
         font-family: 'Courier New', monospace;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
-    .back-btn {
-        position: absolute;
-        top: 90px;
-        left: 20px;
-        z-index: 3;
+
+    .circuit-schema {
+        background: rgba(255,255,255,0.02);
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: transform 0.3s;
     }
+    .circuit-schema:hover {
+        transform: scale(1.02);
+        border-color: var(--bs-danger);
+    }
+    .circuit-schema img {
+        width: 100%;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .schema-placeholder {
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        border: 2px dashed rgba(255,255,255,0.2);
+    }
+    .schema-placeholder i {
+        font-size: 5rem;
+        color: var(--bs-danger);
+        opacity: 0.5;
+        margin-bottom: 1rem;
+    }
+
+    .back-btn {
+        margin-bottom: 1rem;
+    }
+    .back-btn .btn {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .detail-item {
+        background: rgba(255,255,255,0.03);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid var(--bs-danger);
+        transition: background-color 0.3s;
+    }
+    .detail-item:hover {
+        background: rgba(220, 53, 69, 0.1);
+    }
+
     @media (max-width: 768px) {
-        .circuit-hero {
-            height: 350px;
-        }
         .lap-time {
             font-size: 2.5rem;
         }
@@ -76,57 +109,49 @@
             font-size: 1.3rem;
         }
     }
-    .detail-item {
-        background: rgba(255,255,255,0.03);
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-left: 4px solid var(--bs-danger);
-    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="position-relative">
-    <div class="back-btn">
-        <a href="/" class="btn btn-outline-light bg-dark bg-opacity-50 backdrop-blur">
-            <i class="bi bi-arrow-left me-1"></i> 
-            Back to Circuits
-        </a>
-    </div>
+<!-- Простой заголовок вместо hero -->
+<div class="circuit-header">
+    <div class="container">
+        <div class="back-btn">
+            <a href="/" class="btn btn-outline-light bg-dark bg-opacity-50">
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Circuits
+            </a>
+        </div>
 
-    <div class="circuit-hero" style="background-image: url('{{ circuit.image or '' }}');">
-        <div class="container h-100">
-            <div class="row h-100 align-items-end hero-content pb-5">
-                <div class="col-lg-10">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <span class="badge bg-danger px-3 py-2 fs-6">
-                            <i class="bi bi-flag-fill me-1"></i>
-                            Circuit #{{ circuit.id }}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="badge bg-danger px-3 py-2 fs-6">
+                        <i class="bi bi-flag-fill me-1"></i>
+                        Circuit #{{ circuit.id }}
+                    </span>
+                    {% if circuit.first_grand_prix %}
+                    <span class="badge bg-dark border border-light px-3 py-2 fs-6">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        Since {{ circuit.first_grand_prix }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                <h1 class="display-2 fw-bold mb-3">{{ circuit.name }}</h1>
+
+                <div class="d-flex flex-wrap align-items-center gap-4">
+                    <h2 class="h3 mb-0">
+                        <span class="badge bg-dark bg-opacity-75 px-4 py-3">
+                            {{ circuit.competition.name }}
                         </span>
-                        {% if circuit.first_grand_prix %}
-                        <span class="badge bg-dark border border-light px-3 py-2 fs-6">
-                            <i class="bi bi-calendar-event me-1"></i>
-                            Since {{ circuit.first_grand_prix }}
+                    </h2>
+
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-geo-alt-fill text-danger me-2 fs-4"></i>
+                        <span class="fs-4">
+                            {{ circuit.competition.location.city }}, {{ circuit.competition.location.country }}
                         </span>
-                        {% endif %}
-                    </div>
-                    
-                    <h1 class="display-2 fw-bold mb-3">{{ circuit.name }}</h1>
-                    
-                    <div class="d-flex flex-wrap align-items-center gap-4">
-                        <h2 class="h3 mb-0">
-                            <span class="badge bg-dark bg-opacity-75 px-4 py-3">
-                                {{ circuit.competition.name }}
-                            </span>
-                        </h2>
-                        
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-geo-alt-fill text-danger me-2 fs-4"></i>
-                            <span class="fs-4">
-                                {{ circuit.competition.location.city }}, {{ circuit.competition.location.country }}
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -135,68 +160,20 @@
 </div>
 
 <main class="container py-5">
-    <!-- Quick Stats -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <div class="stat-icon">
-                    <i class="bi bi-signpost-split"></i>
-                </div>
-                <h3 class="fw-bold mb-2">{{ circuit.length or 'N/A' }}</h3>
-                <p class="text-secondary-emphasis mb-0">Track Length</p>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <div class="stat-icon">
-                    <i class="bi bi-arrow-repeat"></i>
-                </div>
-                <h3 class="fw-bold mb-2">{{ circuit.laps or 'N/A' }}</h3>
-                <p class="text-secondary-emphasis mb-0">Laps</p>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <div class="stat-icon">
-                    <i class="bi bi-route"></i>
-                </div>
-                <h3 class="fw-bold mb-2">{{ circuit.race_distance or 'N/A' }}</h3>
-                <p class="text-secondary-emphasis mb-0">Race Distance</p>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-6">
-            <div class="stat-card text-center">
-                <div class="stat-icon">
-                    <i class="bi bi-people-fill"></i>
-                </div>
-                <h3 class="fw-bold mb-2">
-                    {% if circuit.capacity %}
-                    {{ "{:,}".format(circuit.capacity) }}
-                    {% else %}
-                    N/A
-                    {% endif %}
-                </h3>
-                <p class="text-secondary-emphasis mb-0">Spectator Capacity</p>
-            </div>
-        </div>
-    </div>
 
     <div class="row g-4">
-        <!-- Main Info -->
-        <div class="col-lg-8">
-            <div class="card bg-dark border-secondary">
+        <!-- Левая колонка - информация -->
+        <div class="col-lg-7">
+            <!-- Circuit Info Card -->
+            <div class="card bg-dark border-secondary mb-4">
                 <div class="card-header bg-black border-secondary">
                     <h3 class="mb-0">
                         <i class="bi bi-info-circle-fill text-danger me-2"></i>
                         Circuit Information
                     </h3>
                 </div>
-                
+
                 <div class="card-body">
-                    <!-- Details Grid -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="detail-item">
@@ -205,61 +182,72 @@
                                 </small>
                                 <span class="fw-bold fs-5">{{ circuit.first_grand_prix or 'N/A' }}</span>
                             </div>
-                            
+
                             <div class="detail-item">
                                 <small class="text-secondary-emphasis d-block mb-1">
                                     <i class="bi bi-building me-1"></i>Circuit Opened
                                 </small>
                                 <span class="fw-bold fs-5">{{ circuit.opened or 'N/A' }}</span>
                             </div>
-                        </div>
-                        
-                        <div class="col-md-6">
+
                             <div class="detail-item">
                                 <small class="text-secondary-emphasis d-block mb-1">
                                     <i class="bi bi-person-badge me-1"></i>Owner
                                 </small>
                                 <span class="fw-bold fs-5">{{ circuit.owner or 'Not specified' }}</span>
                             </div>
-                            
+                        </div>
+
+                        <div class="col-md-6">
                             <div class="detail-item">
                                 <small class="text-secondary-emphasis d-block mb-1">
                                     <i class="bi bi-flag me-1"></i>Grand Prix
                                 </small>
                                 <span class="fw-bold fs-5">{{ circuit.competition.name }}</span>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Location Card -->
-                    <div class="card bg-black border-secondary mt-4">
-                        <div class="card-body">
-                            <h5 class="mb-3">
-                                <i class="bi bi-pin-map-fill text-danger me-2"></i>
-                                Location Details
-                            </h5>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <small class="text-secondary-emphasis d-block">Country</small>
-                                    <span class="fw-bold">{{ circuit.competition.location.country }}</span>
-                                </div>
-                                <div class="col-sm-4">
-                                    <small class="text-secondary-emphasis d-block">City</small>
-                                    <span class="fw-bold">{{ circuit.competition.location.city }}</span>
-                                </div>
-                                <div class="col-sm-4">
-                                    <small class="text-secondary-emphasis d-block">Circuit ID</small>
-                                    <span class="fw-bold">#{{ circuit.id }}</span>
-                                </div>
+
+                            <div class="detail-item">
+                                <small class="text-secondary-emphasis d-block mb-1">
+                                    <i class="bi bi-geo-alt me-1"></i>Country
+                                </small>
+                                <span class="fw-bold fs-5">{{ circuit.competition.location.country }}</span>
+                            </div>
+
+                            <div class="detail-item">
+                                <small class="text-secondary-emphasis d-block mb-1">
+                                    <i class="bi bi-building me-1"></i>City
+                                </small>
+                                <span class="fw-bold fs-5">{{ circuit.competition.location.city }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Схема трассы (если есть) -->
+            {% if circuit.image %}
+            <div class="circuit-schema">
+                <h4 class="mb-3">
+                    <i class="bi bi-diagram-3 text-danger me-2"></i>
+                    Circuit Layout
+                </h4>
+                <img src="{{ circuit.image }}"
+                     alt="{{ circuit.name }} layout"
+                     loading="lazy"
+                     onerror="this.parentElement.innerHTML = '<div class=\'schema-placeholder\'><i class=\'bi bi-map\'></i><h5>Circuit layout not available</h5><p class=\'text-secondary-emphasis\'>Technical diagram coming soon</p></div>'">
+            </div>
+            {% else %}
+            <!-- Placeholder если нет схемы -->
+            <div class="schema-placeholder">
+                <i class="bi bi-map"></i>
+                <h5>Circuit Layout</h5>
+                <p class="text-secondary-emphasis">Technical diagram not available for this circuit</p>
+            </div>
+            {% endif %}
         </div>
 
-        <!-- Lap Record & History -->
-        <div class="col-lg-4">
+        <!-- Правая колонка - Lap Record & Timeline -->
+        <div class="col-lg-5">
             {% if circuit.lap_record %}
             <div class="lap-record-display mb-4">
                 <div class="text-center">
@@ -295,7 +283,7 @@
                                 <div class="fw-bold">{{ circuit.first_grand_prix or 'N/A' }}</div>
                             </div>
                         </div>
-                        
+
                         <div class="d-flex mb-3">
                             <div class="me-3">
                                 <i class="bi bi-building text-danger fs-4"></i>
@@ -305,7 +293,7 @@
                                 <div class="fw-bold">{{ circuit.opened or 'N/A' }}</div>
                             </div>
                         </div>
-                        
+
                         <div class="d-flex">
                             <div class="me-3">
                                 <i class="bi bi-flag text-danger fs-4"></i>
@@ -316,6 +304,42 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Дополнительная информация о трассе -->
+            <div class="card bg-dark border-secondary mt-4">
+                <div class="card-header bg-black border-secondary">
+                    <h4 class="mb-0">
+                        <i class="bi bi-rulers text-danger me-2"></i>
+                        Technical Specs
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush bg-transparent">
+                        <li class="list-group-item bg-transparent text-light border-secondary d-flex justify-content-between px-0">
+                            <span class="text-secondary-emphasis">Length</span>
+                            <span class="fw-bold">{{ circuit.length or 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item bg-transparent text-light border-secondary d-flex justify-content-between px-0">
+                            <span class="text-secondary-emphasis">Laps</span>
+                            <span class="fw-bold">{{ circuit.laps or 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item bg-transparent text-light border-secondary d-flex justify-content-between px-0">
+                            <span class="text-secondary-emphasis">Race Distance</span>
+                            <span class="fw-bold">{{ circuit.race_distance or 'N/A' }}</span>
+                        </li>
+                        <li class="list-group-item bg-transparent text-light border-secondary d-flex justify-content-between px-0">
+                            <span class="text-secondary-emphasis">Capacity</span>
+                            <span class="fw-bold">
+                                {% if circuit.capacity %}
+                                {{ "{:,}".format(circuit.capacity) }}
+                                {% else %}
+                                N/A
+                                {% endif %}
+                            </span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -16,18 +16,48 @@
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Home -->
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'all_circuits' %}active text-danger{% endif %} fs-5"
+                        <a class="nav-link {% if request.endpoint == 'home' %}active text-danger{% endif %} fs-5"
                            href="/">
-                           <i class="bi bi-grid-3x3-gap-fill me-1"></i>
-                           Circuits
+                            <i class="bi bi-house-door-fill me-1"></i>
+                            Home
                         </a>
                     </li>
+
+                    <!-- Circuits -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'all_circuits' %}active text-danger{% endif %} fs-5"
+                           href="/circuits">
+                            <i class="bi bi-grid-3x3-gap-fill me-1"></i>
+                            Circuits
+                        </a>
+                    </li>
+
+                    <!-- Teams -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'teams' %}active text-danger{% endif %} fs-5"
+                           href="/teams">
+                            <i class="bi bi-tools me-1"></i>
+                            Teams
+                        </a>
+                    </li>
+
+                    <!-- Drivers -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'drivers_search' %}active text-danger{% endif %} fs-5"
+                           href="/driver_search">
+                            <i class="bi bi-person-badge me-1"></i>
+                            Drivers
+                        </a>
+                    </li>
+
+                    <!-- Status (отдельно, может быть справа) -->
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'status' %}active text-danger{% endif %} fs-5"
                            href="/status">
-                           <i class="bi bi-activity me-1"></i>
-                           Status
+                            <i class="bi bi-activity me-1"></i>
+                            Status
                         </a>
                     </li>
                 </ul>
@@ -63,8 +93,40 @@
     }
     .nav-link.active {
         font-weight: bold;
+        position: relative;
+    }
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 1rem;
+        right: 1rem;
+        height: 2px;
+        background: var(--bs-danger);
+        border-radius: 2px 2px 0 0;
+    }
+    .nav-link {
+        transition: color 0.3s ease;
+        position: relative;
+        margin: 0 0.25rem;
+    }
+    .nav-link:hover {
+        color: var(--bs-danger) !important;
     }
     .text-secondary-emphasis {
         color: rgba(255,255,255,0.6) !important;
+    }
+
+    @media (max-width: 991.98px) {
+        .navbar-nav {
+            padding: 1rem 0;
+        }
+        .nav-link.active::after {
+            display: none;
+        }
+        .nav-link.active {
+            background: rgba(220, 53, 69, 0.1);
+            border-radius: 5px;
+        }
     }
 </style>

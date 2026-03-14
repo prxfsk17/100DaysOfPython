@@ -154,13 +154,6 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <div class="d-flex align-items-center gap-3 mb-3">
-                    <span class="badge bg-danger px-3 py-2">SYSTEM STATUS</span>
-                    <span class="badge bg-dark border border-light px-3 py-2">
-                        <i class="bi bi-clock-history me-1"></i>
-                        Live Monitor
-                    </span>
-                </div>
 
                 <h1 class="display-3 fw-bold mb-4">
                     Server <span class="text-danger">Status</span>
@@ -235,7 +228,7 @@
                         </span>
                         <span class="info-value">
                             {% if last_update and last_update != 'Never' %}
-                                {{ last_update }}
+                                {{ last_update|strftime }}
                             {% else %}
                                 Never
                             {% endif %}
@@ -373,46 +366,6 @@
                             <strong>Note:</strong> Force refresh will fetch new data from the F1 API.
                             This may take a few moments depending on API response time.
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- System Metrics -->
-        <div class="col-12">
-            <div class="row g-3">
-                <div class="col-sm-4">
-                    <div class="metric-card">
-                        <div class="metric-value">
-                            {{ circuits_count }}
-                        </div>
-                        <div class="metric-label">Total Circuits</div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="metric-card">
-                        <div class="metric-value">
-                            {% if cache_age_seconds %}
-                                {{ ((cache_age_seconds / 60)|round(1)) }}m
-                            {% else %}
-                                N/A
-                            {% endif %}
-                        </div>
-                        <div class="metric-label">Avg Response Time</div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="metric-card">
-                        <div class="metric-value">
-                            {% if circuits_count > 0 %}
-                            <span class="text-success">Online</span>
-                            {% else %}
-                            <span class="text-warning">Partial</span>
-                            {% endif %}
-                        </div>
-                        <div class="metric-label">System Status</div>
                     </div>
                 </div>
             </div>

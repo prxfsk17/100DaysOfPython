@@ -1,81 +1,16 @@
-import requests
-import os
-from dotenv import load_dotenv
-from flask import Flask, render_template
+import dateutil
+from flask import Flask, render_template, url_for, request, session
 from datetime import datetime
-
-load_dotenv()
+from werkzeug.utils import redirect
+from fetch_data import fetch_teams_from_api, fetch_drivers_from_api, fetch_circuits_from_api
 
 app = Flask(__name__)
 
-API_KEY = os.getenv("F1_KEY")
-API_URL = "https://v1.formula-1.api-sports.io/circuits"
-
 circuits_cache = None
-statistics_cache = None
+teams_cache = None
+drivers_cache = []
+statistics_circuits_cache = None
 last_update_time = None
-
-def get_headers():
-    return {'x-apisports-key': API_KEY}
-
-def safe_get_capacity(capacity):
-    if capacity is None:
-        return 0
-    elif isinstance(capacity, int):
-        return capacity
-    elif isinstance(capacity, str):
-        try:
-            return int(capacity.replace(',', ''))
-        except (ValueError, AttributeError):
-            return 0
-    else:
-        return 0
-
-def fetch_circuits_from_api():
-    try:
-        response = requests.get(API_URL, headers=get_headers(), timeout=10)
-        response.raise_for_status()
-        data = response.json()
-        circuits = data.get("response", [])
-
-        if circuits:
-            for circuit in circuits:
-                capacity = circuit.get('capacity')
-                circuit['capacity'] = safe_get_capacity(capacity)
-            return circuits
-        else:
-            return get_test_circuits()
-
-    except requests.exceptions.RequestException as e:
-        print(e)
-        return get_test_circuits()
-    except Exception as e:
-        print(e)
-        return get_test_circuits()
-
-def get_test_circuits():
-    return [{
-        'id': 1,
-        'name': 'Albert Park Circuit',
-        'image': 'https://media.api-sports.io/formula-1/circuits/1.png',
-        'competition': {
-            'id': 1,
-            'name': 'Australia Grand Prix',
-            'location': {'country': 'Australia', 'city': 'Melbourne'}
-        },
-        'first_grand_prix': 1996,
-        'laps': 58,
-        'length': '5.278 km',
-        'race_distance': '306.124 km',
-        'lap_record': {
-            'time': '1:19.813',
-            'driver': 'Charles Leclerc',
-            'year': '2024'
-        },
-        'capacity': 80000,
-        'opened': 1953,
-        'owner': None
-    }]
 
 def calculate_statistics(circuits):
     total_capacity = 0
@@ -94,20 +29,30 @@ def calculate_statistics(circuits):
         'country_count': len(countries)
     }
 
-def update_info():
-    global circuits_cache, statistics_cache, last_update_time
-
-    now = datetime.now()
-
-    if (circuits_cache is None or statistics_cache is None or
-            last_update_time is None):
+def update_circuits_info():
+    global circuits_cache, statistics_circuits_cache, last_update_time
+    if circuits_cache is None or statistics_circuits_cache is None or last_update_time is None:
         circuits_cache = fetch_circuits_from_api()
-        statistics_cache = calculate_statistics(circuits_cache)
-        last_update_time = now
+        statistics_circuits_cache = calculate_statistics(circuits_cache)
+        last_update_time = datetime.now()
+
+
+def update_teams_info():
+    global teams_cache, last_update_time
+    if teams_cache is None or last_update_time is None:
+        teams_cache = fetch_teams_from_api()
+        last_update_time = datetime.now()
+
+
+def update_drivers_info():
+    global drivers_cache, last_update_time
+    if drivers_cache is None or last_update_time is None:
+        drivers_cache = []
+        last_update_time = datetime.now()
+
 
 @app.context_processor
 def utility_processor():
-
     def format_number(value):
         try:
             return "{:,}".format(value)
@@ -139,20 +84,59 @@ def utility_processor():
         'last_update': last_update_time
     }
 
+
+@app.template_filter('strftime')
+def _jinja2_filter_datetime(date, fmt=None):
+    if isinstance(date, str):
+        date = dateutil.parser.parse(date)
+    native = date.replace(tzinfo=None)
+    format = '%b %d, %Y - %H:%M'
+    return native.strftime(format)
+
+@app.template_filter('safe_int')
+def safe_int_filter(value):
+    try:
+        return int(value) if value is not None else 0
+    except:
+        return 0
+
+@app.template_filter('to_datetime')
+def to_datetime_filter(date_string):
+    if isinstance(date_string, str):
+        try:
+            from datetime import datetime
+            return datetime.strptime(date_string, '%Y-%m-%d')
+        except:
+            return None
+    return date_string
+
 @app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/teams')
+def all_teams():
+    update_teams_info()
+    return render_template('teams.html', teams=teams_cache)
+
+@app.route('/driver_search')
+def drivers_search():
+    return render_template('driver_search.html')
+
+@app.route('/drivers')
+def all_drivers():
+    return render_template('drivers.html', drivers=drivers_cache)
+
 @app.route('/circuits')
 def all_circuits():
-    update_info()
-
+    update_circuits_info()
     return render_template('circuits.html',
                            circuits=circuits_cache,
-                           **statistics_cache)
-
+                           **statistics_circuits_cache)
 
 @app.route('/circuit/<int:circuit_id>')
 def circuit_detail(circuit_id):
-    update_info()
-
+    update_circuits_info()
     circuit = next((c for c in circuits_cache if c.get('id') == circuit_id), None)
 
     if circuit:
@@ -160,32 +144,74 @@ def circuit_detail(circuit_id):
     else:
         return render_template('error.html', message="Circuit not found"), 404
 
+@app.route('/team/<int:team_id>')
+def team_detail(team_id):
+    update_teams_info()
+    team = next((t for t in teams_cache if t.get('id') == team_id), None)
+    if team:
+        return render_template('team_detail.html', team=team)
+    else:
+        return render_template('error.html', message="Team not found"), 404
+
+@app.route('/driver/<int:driver_id>')
+def driver_detail(driver_id):
+    update_drivers_info()
+    driver = next((d for d in drivers_cache if d.get('id') == driver_id), None)
+
+    if driver:
+        return render_template('driver_detail.html', driver=driver)
+    else:
+        return render_template('error.html', message="Driver not found"), 404
+
+@app.route('/driver/search')
+def search_driver():
+    global drivers_cache
+
+    search_query = request.args.get('search', '').strip()
+
+    if len(search_query) < 3:
+        return render_template('drivers.html',
+                               error="Search query must be at least 3 characters long",
+                               search_query=search_query)
+    drivers = fetch_drivers_from_api(search_query)
+    if not drivers:
+        return render_template('drivers.html',
+                               error=f"No drivers found matching '{search_query}'",
+                               search_query=search_query)
+    if len(drivers)==1:
+        return render_template('driver_detail.html', driver=drivers[0])
+    else:
+        drivers_cache = drivers
+        return redirect(url_for('all_drivers'))
 
 @app.route('/force-refresh')
 def force_refresh():
-    global circuits_cache, statistics_cache, last_update_time
+    global circuits_cache, teams_cache, drivers_cache, statistics_circuits_cache, last_update_time
 
     circuits_cache = fetch_circuits_from_api()
-    statistics_cache = calculate_statistics(circuits_cache)
+    teams_cache = fetch_teams_from_api()
+    drivers_cache = []
+    statistics_circuits_cache = calculate_statistics(circuits_cache)
     last_update_time = datetime.now()
 
-    return {
-        'status': 'success',
-        'message': f'Data refreshed: {len(circuits_cache)} circuits',
-        'timestamp': last_update_time.isoformat()
-    }, 200
+    # return {
+    #     'status': 'success',
+    #     'message': f'Data refreshed: {len(circuits_cache)} circuits',
+    #     'timestamp': last_update_time.isoformat()
+    # }, 200
+    return redirect(url_for('home'))
 
 
 @app.route('/status')
 def status():
     cache_info = {
         'circuits_count': len(circuits_cache) if circuits_cache else 0,
-        'last_update': last_update_time.isoformat() if last_update_time else 'Never',
+        'last_update': last_update_time if last_update_time else 'Never',
         'cache_age_seconds': (datetime.now() - last_update_time).total_seconds()
         if last_update_time else None,
     }
     return render_template('status.html', **cache_info)
 
 if __name__ == '__main__':
-    update_info()
+    update_circuits_info()
     app.run(debug=True)
