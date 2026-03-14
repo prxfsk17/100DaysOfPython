@@ -77,7 +77,6 @@ def fetch_drivers_from_api(search):
         response.raise_for_status()
         data = response.json()
         drivers = data.get("response", [])
-        print(data)
         if drivers:
             return drivers
         else:
